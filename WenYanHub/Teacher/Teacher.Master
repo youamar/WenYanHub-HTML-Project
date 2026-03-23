@@ -1,0 +1,132 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Teacher.Master.cs" Inherits="WenYanHub.Teacher.TeacherMaster" %>
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Portal - WenYanHub</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Style synchronization: Annong paper background and modern serif font */
+        body { background-color: #F9F7F2; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .font-classic { font-family: 'Noto Serif SC', 'KaiTi', serif; }
+
+        /* Navigation bar border: Synchronize the 3px crimson red background border of Site.Master */
+        .navbar-ink {
+            background-color: #2C2420 !important;
+            border-bottom: 3px solid #8B0000; 
+            padding: 0.5rem 0;
+        }
+
+        .nav-link { color: rgba(255,255,255,0.85) !important; transition: 0.3s; }
+        .nav-link:hover { color: #D4AF37 !important; }
+
+        /* Synchronize the drop-down menu with the Site.Master style */
+        .dropdown-menu {
+            background-color: #FFFBF0;
+            border: 1px solid #D7CCC8;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 10px !important;
+        }
+        .dropdown-item:hover { background-color: #EFEBE9; color: #8B0000; }
+
+        /* User profile icon style */
+        .user-avatar-circle {
+            width: 40px; height: 40px;
+            background-color: #5D4037;
+            border: 1px solid #FFC107;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; text-decoration: none;
+            cursor: pointer; transition: 0.3s;
+        }
+        .user-avatar-circle:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+
+        .main-content { flex: 1; padding: 40px 0; }
+    </style>
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-ink sticky-top shadow-sm">
+            <div class="container">
+                <a class="navbar-brand font-classic fw-bold" runat="server" href="~/Teacher/TeacherDashboard.aspx">
+                    <i class="fa-solid fa-scroll me-2" style="color: #D4AF37;"></i>WenYanHub
+                </a>
+                
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#teacherNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="teacherNav">
+                    <ul class="navbar-nav flex-grow-1 align-items-center gap-2">
+                        <li class="nav-item"><a class="nav-link px-3 font-classic" href="TeacherDashboard.aspx">Home</a></li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle px-3 font-classic" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-book-open-reader me-1"></i> Resources
+                            </a>
+                            <ul class="dropdown-menu border-0 shadow mt-2">
+                                <li><a class="dropdown-item py-2 font-classic" href="ContentManage.aspx">Lessons Content</a></li>
+                                <li><a class="dropdown-item py-2 font-classic" href="NoteManage.aspx">Scholar Notes</a></li>
+                                <li><a class="dropdown-item py-2 font-classic" href="PracticeManage.aspx">Practice Archive</a></li>
+                                <li><a class="dropdown-item py-2 font-classic" href="VideoManage.aspx">Video & Zoom</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item"><a class="nav-link px-3 font-classic" href="GameLeaderboard.aspx">Game Leaderboard</a></li>
+                        <li class="nav-item"><a class="nav-link px-3 font-classic" href="TeacherAnalytics.aspx">Analytics</a></li>
+                        <li class="nav-item"><a class="nav-link px-3 font-classic" href="TeacherForum.aspx">Forum</a></li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link p-0" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="user-avatar-circle">
+                                    <%: Session["Username"] != null ? Session["Username"].ToString().Substring(0, 1).ToUpper() : "T" %>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg" aria-labelledby="userDropdown">
+                                <li>
+                                    <h6 class="dropdown-header font-classic text-dark">
+                                        <i class="fa-solid fa-user-tie me-2"></i>Master <strong><%: Session["Username"] %></strong>
+                                    </h6>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item py-2 font-classic" href="UpdateProfile.aspx">
+                                        <i class="fa-solid fa-id-card me-2"></i> My Profile
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a id="btnLogout" runat="server" onserverclick="btnLogout_Click" class="dropdown-item text-danger py-2 font-classic" style="cursor: pointer;">
+                                            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                                        </a>
+                                    </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container main-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+        </div>
+
+        <footer class="container pb-4">
+            <hr class="border-secondary opacity-25" />
+            <p class="text-muted font-classic small">
+                &copy; <%: DateTime.Now.Year %> - <strong>WenYan Hub Faculty Portal</strong>
+            </p>
+        </footer>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

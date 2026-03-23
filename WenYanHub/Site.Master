@@ -1,0 +1,234 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WenYanHub.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - WenYanHub</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/Site.css" rel="stylesheet" runat="server" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { background-color: #F9F7F2; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
+        .font-classic { font-family: 'Noto Serif SC', 'KaiTi', 'STKaiti', serif; }
+        .navbar-ink { background-color: #2C2420 !important; border-bottom: 3px solid #8B0000; }
+        .dropdown-menu { background-color: #FFFBF0; border: 1px solid #D7CCC8; }
+        .dropdown-item:hover { background-color: #EFEBE9; color: #8B0000; }
+        .btn-back-to-top { position: fixed; bottom: 20px; right: 20px; display: none; background-color: #3e2723; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; z-index: 1000; }
+        .ls-2 { letter-spacing: 2px; }
+        
+        .notif-unread { background-color: rgba(139, 0, 0, 0.03); }
+        .dropdown-menu i {
+    color: #3E2723 !important; 
+}
+
+.dropdown-header {
+    color: #5D4037 !important; 
+}
+
+.dropdown-item:hover {
+    background-color: #EFEBE9 !important; 
+    color: #8B0000 !important; 
+}
+
+.dropdown-item:hover i {
+    color: #8B0000 !important;
+}
+
+        .notif-msg-text { 
+            display: block; 
+            max-width: 240px; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            white-space: nowrap; 
+            transition: all 0.2s ease;
+        }
+        .expanded .notif-msg-text { 
+            white-space: normal; 
+            max-width: 100%; 
+        }
+
+        .dropdown-item i.fa-user-pen, 
+.dropdown-item i.fa-right-from-bracket,
+.dropdown-item {
+    color: #5D4037 !important; 
+}
+
+.dropdown-item.text-danger {
+    color: #5D4037 !important; 
+}
+
+.dropdown-item:hover {
+    background-color: #EFEBE9 !important; 
+    color: #8B0000 !important;          
+}
+
+.dropdown-item:hover i {
+    color: #8B0000 !important;        
+}
+    </style>
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" />
+        
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-ink sticky-top shadow-sm mb-4">
+            <div class="container">
+                <a class="navbar-brand font-classic fw-bold ls-2" runat="server" href="~/Others/Default.aspx">
+                    <i class="fa-solid fa-scroll me-2" style="color: #D4AF37;"></i>WenYanHub
+                </a>
+                
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav flex-grow-1 align-items-center gap-1">
+                        <li class="nav-item"><a class="nav-link px-3 font-classic" runat="server" href="~/Others/Default.aspx">Home</a></li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle px-3 font-classic" href="#" id="studyDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-book-open-reader me-1 opacity-75"></i> Study
+                            </a>
+                            <ul class="dropdown-menu shadow border-0 mt-2">
+                                <li><h6 class="dropdown-header text-uppercase small ls-1 text-muted">Resources</h6></li>
+                                <li><a class="dropdown-item py-2 font-classic" runat="server" href="~/Contents/Index.aspx"><i class="fa-solid fa-book me-2" style="color: #30475E;"></i> Library</a></li>
+                                <li><a class="dropdown-item py-2 font-classic" runat="server" href="~/Contents/AuthorDirectory.aspx"><i class="fa-solid fa-book me-2" style="color: #30475E;"></i> Author</a></li>
+                                <li><a class="dropdown-item py-2 font-classic" href='<%= Session["UserId"] != null ? ResolveUrl("~/Learning/Zoom.aspx") : ResolveUrl("~/Account/Login.aspx") %>'><i class="fa-solid fa-video me-2" style="color: #0b5ed7;"></i> Zoom Class</a></li>
+                                <li><a class="dropdown-item py-2 font-classic" runat="server" href="~/Learning/VideoSelection.aspx"><i class="fa-brands fa-youtube me-2" style="color: #d9534f;"></i> Video Lessons</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle px-3 font-classic" href="#" id="practiceDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-pen-nib me-1 opacity-75"></i> Practice
+                            </a>
+                            <ul class="dropdown-menu shadow border-0 mt-2">
+                                <li><h6 class="dropdown-header text-uppercase small ls-1 text-muted">Challenge</h6></li>
+                                <li><a class="dropdown-item py-2 font-classic" href='<%= Session["UserId"] != null ? ResolveUrl("~/Learning/Quiz.aspx?mode=daily") : ResolveUrl("~/Account/Login.aspx") %>'><i class="fa-solid fa-clock me-2" style="color: #8B0000;"></i> Daily Quiz</a></li>
+                                <li><a class="dropdown-item py-2 font-classic" href='<%= Session["UserId"] != null ? ResolveUrl("~/Learning/PracticeSelection.aspx") : ResolveUrl("~/Account/Login.aspx") %>'><i class="fa-solid fa-layer-group me-2" style="color: #2E7D32;"></i> Exercises</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header text-uppercase small ls-1 text-muted">History</h6></li>
+                                <li><a class="dropdown-item py-2 font-classic" href='<%= Session["UserId"] != null ? ResolveUrl("~/Learning/SubmittedWork.aspx") : ResolveUrl("~/Account/Login.aspx") %>'><i class="fa-solid fa-file-arrow-up me-2" style="color: #8C6B1F;"></i> Submitted Work</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item"><a class="nav-link px-3 font-classic" runat="server" href="~/Others/About.aspx">About</a></li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center gap-2">
+                        <% if (Session["UserId"] == null) { %>
+                            <li class="nav-item"><a class="btn btn-sm btn-outline-light rounded-pill px-4 font-classic" runat="server" href="~/Account/Login.aspx" style="border-color: #D7CCC8;">Log In</a></li>
+                            <li class="nav-item"><a class="btn btn-sm text-white rounded-pill px-4 fw-bold font-classic shadow-sm" runat="server" href="~/Account/Register.aspx" style="background-color: #8B0000;">Sign Up</a></li>
+                        <% } else { %>
+                            <li class="nav-item me-2">
+                                <span class="text-light opacity-75 font-classic small">Hi, <strong class="text-white"><%: Session["Username"] %></strong></span>
+                            </li>
+
+                            <li class="nav-item dropdown me-2">
+                                <a class="nav-link position-relative text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-regular fa-bell fs-5"></i>
+                                    <asp:Label ID="lblNotifBadge" runat="server" CssClass="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-dark" style="font-size: 0.6rem;" Visible="false"></asp:Label>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-0" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                                     <div class="p-3 border-bottom bg-light">
+                                         <h6 class="mb-0 fw-bold font-classic text-dark">Notifications</h6>
+                                     </div>
+                                     <asp:Repeater ID="rptNotifs" runat="server">
+                                         <ItemTemplate>
+                                             <li onclick="toggleNotif(this, '<%# Eval("NotificationId") %>', event)" 
+                                                 class='dropdown-item py-3 border-bottom <%# (Convert.ToBoolean(Eval("IsRead")) ? "" : "notif-unread") %>' style="cursor:pointer;">
+                                                 <div class="flex-grow-1">
+                                                     <div class="d-flex align-items-center mb-1">
+                                                         <asp:PlaceHolder runat="server" Visible='<%# !Convert.ToBoolean(Eval("IsRead")) %>'>
+                                                             <span id='dot_<%# Eval("NotificationId") %>' class="badge rounded-circle bg-danger p-1 me-2" style="width: 8px; height: 8px;"> </span>
+                                                         </asp:PlaceHolder>
+                                                         <small class='fw-bold text-dark <%# Convert.ToBoolean(Eval("IsRead")) ? "opacity-50" : "" %>'>
+                                                             <%# Eval("Title") %>
+                                                         </small>
+                                                     </div>
+                                                     <small class="text-muted notif-msg-text"><%# Eval("Message") %></small>
+                                                 </div>
+                                                 <small class="text-secondary ms-2" style="font-size: 10px;"><%# Eval("CreatedAt", "{0:MM/dd}") %></small>
+                                             </li>
+                                         </ItemTemplate>
+                                     </asp:Repeater>
+                                     <asp:Panel ID="pnlNoNotif" runat="server" Visible="false">
+                                         <div class="p-4 text-center text-muted small">No new notifications</div>
+                                     </asp:Panel>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                    <div class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold me-2 shadow-sm border border-warning" style="width: 35px; height: 35px; background-color: #5D4037;">
+                                        <%: Session["Username"].ToString().Substring(0, 1).ToUpper() %>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2">
+                                    <li><h6 class="dropdown-header font-classic">Signed in as <br><strong><%: Session["Username"] %></strong></h6></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item py-2 font-classic" href='<%= ResolveUrl("~/Others/Edit_Profile.aspx?id=" + Session["UserId"]) %>'><i class="fa-solid fa-user-pen me-2" style="color: #5D4037;"></i> Edit Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><asp:LinkButton ID="btnLogout" runat="server" CssClass="dropdown-item text-danger" OnClick="btnLogout_Click"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</asp:LinkButton></li>
+                                </ul>
+                            </li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+            <hr class="border-secondary opacity-25 mt-5" />
+            <footer class="pb-4">
+                <p class="text-muted font-classic small">&copy; <%: DateTime.Now.Year %> - <strong>WenYan Hub</strong> <span class="mx-2">|</span> <a href='<%= ResolveUrl("~/Others/Feedback.aspx") %>' class="text-decoration-none text-dark">Feedback</a></p>
+            </footer>
+            <button type="button" id="btnBackToTop" onclick="topFunction()" class="btn-back-to-top" title="Back to Top"><i class="fa-solid fa-chevron-up"></i></button>
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleNotif(liElement, notifId, e) {
+            liElement.classList.toggle('expanded');
+
+            e.stopPropagation();
+
+            if (liElement.classList.contains('notif-unread')) {
+
+                liElement.classList.remove('notif-unread');
+                var dot = document.getElementById('dot_' + notifId);
+                if (dot) dot.style.display = 'none';
+
+                var badge = document.getElementById('<%= lblNotifBadge.ClientID %>');
+                if (badge && badge.style.display !== 'none') {
+                    var currentCount = parseInt(badge.innerText) || 0;
+                    if (currentCount > 1) {
+                        badge.innerText = currentCount - 1; 
+                    } else {
+                        badge.style.display = 'none'; 
+                    }
+                }
+
+                fetch('/NotifHandler.ashx?id=' + notifId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            console.error("Failed to mark as read in DB: ", data.error);
+                        }
+                    })
+                    .catch(error => console.error('AJAX Error:', error));
+            }
+        }
+        function topFunction() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
+    </script>
+</body>
+</html>

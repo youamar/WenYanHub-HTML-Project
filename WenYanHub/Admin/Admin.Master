@@ -1,0 +1,351 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.master.cs" Inherits="WenYanHub.Admin.Admin" %>
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>WenYanHub Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --theme-primary: #2C2420;     
+            --theme-secondary: #E8E2D5;   
+            --theme-accent: #D4AF37;      
+            --semantic-danger: #8B0000;   
+            --bg-white: #FFFFFF;
+            --border-color: rgba(44, 36, 32, 0.15);
+        }
+        
+        .text-theme-primary { color: var(--theme-primary) !important; }
+        .text-theme-accent { color: var(--theme-accent) !important; }
+        .text-semantic-danger { color: var(--semantic-danger) !important; }
+        
+        .bg-theme-primary { background-color: var(--theme-primary) !important; color: var(--theme-accent) !important; }
+        .bg-theme-secondary { background-color: var(--theme-secondary) !important; }
+        
+        .font-classic { font-family: 'Noto Serif SC', 'KaiTi', 'STKaiti', serif; }
+        .font-sans { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        .shadow-premium { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05), 0 1px 4px rgba(0, 0, 0, 0.02) !important; transition: all 0.3s ease; }
+        .shadow-premium:hover { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05) !important; }
+
+        .hover-lift { transition: transform 0.2s; }
+        .hover-lift:hover { transform: translateY(-2px); }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(44, 36, 32, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        body { 
+            background-color: var(--theme-secondary); 
+            background-image: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(232, 226, 213, 0) 100%);
+            background-attachment: fixed; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; padding: 3vh 2vw; min-height: 100vh;
+            display: flex; flex-direction: column; 
+        }
+
+        .main-wrapper {
+            zoom: 0.85; background: var(--bg-white); border-radius: 20px; 
+            border: 1px solid var(--bg-white); box-shadow: 0 15px 40px rgba(44, 36, 32, 0.1);
+            width: 100% !important; max-width: 100% !important; margin: 0;
+            display: flex; flex-direction: column; flex-grow: 1; position: relative;
+        }
+
+        .internal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px 35px; background: var(--bg-white); border-bottom: 1px solid var(--border-color);
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+        }
+
+        .brand-logo { 
+            font-family: 'Noto Serif SC', serif; font-weight: 800; font-size: 1.4rem; 
+            color: var(--theme-primary); display: flex; align-items: center; gap: 8px;
+            text-decoration: none; white-space: nowrap; transition: 0.2s;
+        }
+        .brand-logo:hover { color: var(--theme-accent); } 
+
+        .nav-pill-container {
+            background: var(--bg-white); border-radius: 50px; padding: 6px;
+            display: flex; gap: 5px; border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .nav-item-pill {
+            padding: 10px 24px; border-radius: 40px; color: #6D5B53; 
+            text-decoration: none; font-weight: 700; font-size: 0.9rem;
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
+            font-family: 'Noto Serif SC', serif; letter-spacing: 0.5px;
+            border: 2px solid transparent; background: transparent;
+        }
+        .nav-item-pill i { font-size: 1.1rem; opacity: 0.7; transition: 0.3s; }
+        .nav-item-pill:hover { color: var(--theme-primary); border-color: rgba(44,36,32,0.1); }
+        .nav-item-pill:hover i { opacity: 1; color: var(--theme-accent); }
+        
+        .nav-item-pill.active { 
+            border-color: var(--theme-accent); color: var(--theme-accent); 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); 
+        }
+        .nav-item-pill.active i { opacity: 1; color: var(--theme-accent); }
+
+        .bell-icon {
+            width: 45px; height: 45px; display: flex; justify-content: center; align-items: center;
+            font-size: 1.2rem; color: var(--theme-primary); background: transparent;
+            border-radius: 50%; border: 2px solid var(--border-color);
+            position: relative; cursor: pointer; transition: all 0.2s ease;
+        }
+        .bell-icon:hover { border-color: var(--theme-accent); color: var(--theme-accent); transform: translateY(-2px); }
+        
+        .bell-dot {
+            position: absolute; 
+            top: -6px; 
+            right: -6px; 
+            min-width: 22px; 
+            height: 22px; 
+            padding: 0 6px;
+            background: var(--semantic-danger); 
+            color: #FFFFFF;
+            border-radius: 12px;
+            border: 2px solid var(--bg-white); 
+            display: none; 
+            justify-content: center; 
+            align-items: center;
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1;
+            z-index: 10;
+        }
+        .has-notif .bell-dot { 
+            display: flex; 
+            animation: pulseCount 2s infinite; 
+        }
+        
+        @keyframes pulseCount { 
+            0% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7); } 
+            70% { box-shadow: 0 0 0 6px rgba(139, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0); } 
+        }
+
+        .profile-img-container {
+            display: flex; justify-content: center; align-items: center; width: 52px; height: 52px; 
+            background: transparent; border-radius: 50%; border: 2px solid var(--border-color);
+            transition: 0.3s; cursor: pointer;
+        }
+        .profile-img-container img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+        .profile-img-container::after { display: none !important; }
+        .profile-img-container:hover { border-color: var(--theme-accent); transform: scale(1.05); }
+
+        .dropdown-menu { border: 1px solid var(--border-color) !important; background-color: var(--bg-white) !important; box-shadow: 0 10px 30px rgba(44, 36, 32, 0.15) !important; }
+        .dropdown-item { font-family: 'Noto Serif SC', serif; font-weight: 600; color: var(--theme-primary); }
+        .dropdown-item:hover { background-color: var(--theme-secondary); color: var(--theme-primary); }
+
+        .notif-sidebar {
+            position: fixed; top: 20px; right: -420px; width: 380px; height: calc(100vh - 40px); 
+            background: var(--theme-secondary); z-index: 10000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-color); border-top-left-radius: 24px; border-bottom-left-radius: 24px;
+            display: flex; flex-direction: column; box-shadow: -15px 0 40px rgba(44, 36, 32, 0.2); overflow: hidden;
+        }
+        .notif-sidebar.active { right: 0; }
+        .notif-scroll-area { flex: 1 1 auto; overflow-y: auto; padding: 15px; min-height: 0; background-color: var(--theme-secondary); }
+        .noti-item-wrapper { padding: 0; margin-bottom: 12px; position: relative; }
+
+        .notif-card {
+            background: var(--bg-white); border-radius: 12px; padding: 15px; padding-right: 35px;
+            border: 1px solid var(--border-color); display: block; transition: all 0.2s ease; 
+            text-decoration: none !important; color: var(--theme-primary);
+        }
+        .notif-card:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); border-color: var(--theme-accent); }
+        .notif-card.is-read { background: transparent !important; border: 1px dashed var(--border-color) !important; opacity: 0.65; box-shadow: none !important; }
+        .notif-card.is-read:hover { opacity: 0.85; transform: none; border-color: var(--theme-accent) !important; }
+        .notif-card.unread { border-left: 4px solid var(--theme-accent); } 
+
+        .noti-badge-outline { 
+            background: transparent; color: var(--theme-accent); 
+            border: 1px solid var(--theme-accent); 
+            padding: 2px 10px; border-radius: 6px; font-size: 0.75rem; 
+            font-weight: bold; font-family: 'Noto Serif SC', serif; 
+        }
+        .notif-card.is-read .noti-badge-outline { border-color: var(--border-color); color: rgba(44,36,32,0.6); }
+
+        .btn-toggle-hollow {
+            background: transparent !important; 
+            color: var(--theme-primary) !important;
+            border: 2px solid var(--theme-primary) !important; 
+            border-radius: 50px; padding: 6px 20px; font-weight: bold; transition: 0.3s;
+            flex-grow: 1; 
+        }
+        .btn-toggle-hollow:hover { 
+            background-color: rgba(44, 36, 32, 0.05) !important; 
+        }
+        .btn-toggle-hollow.active { 
+            background-color: var(--theme-accent) !important; 
+            color: var(--bg-white) !important; 
+            border: 2px solid var(--theme-primary) !important; 
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2); 
+        }
+
+        .btn-clear-noti {
+            position: absolute; top: 12px; right: 10px; color: rgba(44,36,32,0.4); z-index: 10; transition: 0.2s;
+            background: transparent; border: none; padding: 0;
+        }
+        .btn-clear-noti:hover { color: var(--semantic-danger); opacity: 1; }
+
+        .custom-chk { display: inline-flex; align-items: center; gap: 6px; }
+        .custom-chk input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--theme-primary); margin: 0; }
+        .custom-chk label { font-size: 0.85rem; color: var(--theme-primary); font-family: 'Segoe UI', sans-serif; cursor: pointer; margin: 0; padding-top: 1px; font-weight: bold;}
+
+        main { padding: 30px 40px; }
+    </style>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <asp:ScriptManager runat="server"></asp:ScriptManager>
+
+        <div id="notifPanel" class="notif-sidebar">
+            <asp:UpdatePanel ID="upNotif" runat="server" UpdateMode="Conditional" class="d-flex flex-column h-100">
+                <ContentTemplate>
+                    
+                    <div class="p-4 d-flex justify-content-between align-items-center bg-white" style="border-bottom: 2px solid var(--theme-primary) !important;">
+                        <h5 class="fw-bold mb-0 font-classic text-theme-primary"><i class="bi bi-bell text-theme-accent me-2 fs-4"></i> Activity Center</h5>
+                        <button type="button" onclick="toggleNotif()" class="btn-close opacity-50 hover-lift"></button>
+                    </div>
+                    
+                    <div class="d-flex flex-column p-4 gap-3 sticky-top shadow-sm bg-white border-bottom" style="border-color: var(--border-color) !important;">
+                        <div class="d-flex gap-3">
+                            <asp:Button ID="btnFilterContent" runat="server" Text="Content" OnClick="FilterNotifs_Click" CommandArgument="Content" CssClass="btn-toggle-hollow active" />
+                            <asp:Button ID="btnFilterTickets" runat="server" Text="Tickets" OnClick="FilterNotifs_Click" CommandArgument="Tickets" CssClass="btn-toggle-hollow" />
+                        </div>
+                        
+                        <div class="d-flex gap-4 px-2 align-items-center mt-1">
+                            <div class="custom-chk">
+                                <asp:CheckBox ID="chkUnreadOnly" runat="server" AutoPostBack="true" OnCheckedChanged="FilterUpdate_Changed" Text="Unread Only" />
+                            </div>
+                            <div class="custom-chk">
+                                <asp:CheckBox ID="chkThisWeek" runat="server" AutoPostBack="true" OnCheckedChanged="FilterUpdate_Changed" Text="This Week" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="notifList" class="notif-scroll-area custom-scroll">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom" style="border-color: rgba(44, 36, 32, 0.1) !important;">
+                            <span class="small font-sans fw-bold text-theme-primary opacity-75 text-start">
+                                <i class="bi bi-info-circle me-1 text-theme-primary"></i> Hint: Unread on top, read goes down.
+                            </span>
+                            <asp:LinkButton ID="btnClearAll" runat="server" OnClick="btnClearAll_Click" 
+                                OnClientClick="return confirm('Are you sure you want to clear all visible notifications?');" 
+                                CssClass="small text-decoration-none fw-bold hover-lift d-inline-block text-semantic-danger">
+                                <i class="bi bi-trash3-fill"></i> Clear All
+                            </asp:LinkButton>
+                        </div>
+
+                        <asp:Repeater ID="rptAdminNotis" runat="server" OnItemCommand="rptAdminNotis_ItemCommand">
+                            <ItemTemplate>
+                                <div class="noti-item-wrapper">
+                                    <asp:LinkButton ID="btnNotiRedirect" runat="server" 
+                                        CommandName="Redirect" 
+                                        CommandArgument='<%# Eval("Id") + "|" + Eval("ActionLink") %>'
+                                        CssClass='<%# "notif-card shadow-sm " + ((bool)Eval("IsRead") ? "is-read" : "unread") %>'>
+                                        
+                                        <div class="d-flex align-items-center mb-2 pe-4">
+                                            <span class="noti-badge-outline"><%# Eval("Title") %></span>
+                                            <small class="text-theme-primary opacity-50 ms-auto font-sans fw-bold"><%# Eval("DateString") %></small>
+                                        </div>
+                                        
+                                        <p class="small fw-bold mb-0 font-sans" style="white-space: normal; word-wrap: break-word; color: inherit;"><%# Eval("Message") %></p>
+                                    </asp:LinkButton>
+                                    
+                                    <asp:LinkButton ID="btnClear" runat="server" 
+                                        CommandName="Clear" 
+                                        CommandArgument='<%# Eval("Id") %>' 
+                                        CssClass="btn-clear-noti"
+                                        OnClientClick="event.stopPropagation();"
+                                        ToolTip="Remove this notification">
+                                        <i class="bi bi-x-circle fs-5"></i>
+                                    </asp:LinkButton>
+                                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
+
+                        <asp:PlaceHolder ID="phEmptyNotif" runat="server" Visible="true">
+                            <div class="text-center text-theme-primary opacity-50 mt-5 font-classic bg-white p-4 rounded-4" style="border: 1px dashed var(--border-color);">
+                                <i class="bi bi-check2-circle fs-1 d-block mb-3 text-theme-primary"></i>
+                                <h6 class="fw-bold">All Caught Up!</h6>
+                                <span class="small font-sans fw-bold">There are no pending tasks right now.</span>
+                            </div>
+                        </asp:PlaceHolder>
+                    </div>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+        </div>
+
+        <div class="main-wrapper">
+            <header class="internal-header" style="position: relative; z-index: 9999;">
+                <a href='<%= ResolveClientUrl("~/Admin/AdminDashboard.aspx") %>' class="brand-logo">
+                    <i class="fa-solid fa-scroll text-theme-accent fs-3"></i> 
+                    WenYanHub
+                </a>
+    
+                <div class="nav-pill-container" style="position: relative; z-index: 10000;">
+                    <a href='<%= ResolveClientUrl("~/Admin/AdminDashboard.aspx") %>' class="nav-item-pill" data-page="admindashboard.aspx"><i class="bi bi-grid"></i> Dashboard</a>
+                    <a href='<%= ResolveClientUrl("~/Admin/ManageContent.aspx") %>' class="nav-item-pill" data-page="managecontent.aspx"><i class="bi bi-journal-text"></i> Content</a>
+                    <a href='<%= ResolveClientUrl("~/Admin/ManageUsers.aspx") %>' class="nav-item-pill" data-page="manageusers.aspx"><i class="bi bi-people"></i> Users</a>
+                    <a href='<%= ResolveClientUrl("~/Admin/ViewTickets.aspx") %>' class="nav-item-pill" data-page="viewtickets.aspx"><i class="bi bi-ticket-perforated"></i> Tickets</a>
+                    <a href='<%= ResolveClientUrl("~/Admin/AdminReports.aspx") %>' class="nav-item-pill" data-page="adminreports.aspx"><i class="bi bi-bar-chart"></i> Analytics</a>
+                    <a href='<%= ResolveClientUrl("~/Admin/ContentControl.aspx") %>' class="nav-item-pill" data-page="contentcontrol.aspx"><i class="bi bi-shield-lock"></i> Control</a>
+                </div>
+    
+                <div class="d-flex align-items-center gap-4" style="position: relative; z-index: 10000;">
+                    <div id="bell" runat="server" class="bell-icon hover-lift" onclick="toggleNotif()" title="View Activity">
+                        <i class="bi bi-bell"></i>
+                        <asp:Label ID="lblNotifCount" runat="server" CssClass="bell-dot"></asp:Label>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle profile-img-container" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                            <asp:Image ID="imgProfileTop" runat="server" CssClass="rounded-circle" Width="40" Height="40" style="object-fit: cover; background-color: var(--bg-white);" />
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 rounded-4 p-2" aria-labelledby="dropdownUser" style="min-width: 220px;">
+                            <li><h6 class="dropdown-header font-classic fw-bold text-theme-primary text-uppercase small ls-1 mb-2">My Account</h6></li>
+                            <li><a class="dropdown-item py-2 rounded-3 mb-1 d-flex align-items-center gap-2 fw-bold font-sans" href='<%= ResolveClientUrl("~/Admin/EditProfile.aspx") %>'><i class="bi bi-person-gear text-theme-accent fs-5"></i> Profile Settings</a></li>
+                            <li><hr class="dropdown-divider my-2" style="border-color: var(--border-color);"></li>
+                            <li>
+                                <asp:LinkButton ID="btnLogOut" runat="server" OnClick="btnLogOut_Click" CssClass="dropdown-item py-2 rounded-3 d-flex align-items-center gap-2 fw-bold font-sans text-semantic-danger" CausesValidation="false">
+                                    <i class="bi bi-box-arrow-right fs-5"></i> Log Out
+                                </asp:LinkButton>
+                            </li>                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+            </main>
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleNotif() {
+            document.getElementById('notifPanel').classList.toggle('active');
+        }
+
+        // 🔥 THE FIX: Dynamic Active Tab Highlight mapped to the absolute URLs 🔥
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentUrl = window.location.pathname.toLowerCase();
+            const navLinks = document.querySelectorAll(".nav-item-pill");
+
+            navLinks.forEach(link => {
+                link.classList.remove("active");
+                const pageName = link.getAttribute("data-page");
+
+                if (currentUrl.includes(pageName) || (currentUrl.endsWith('/admin/') && pageName === 'admindashboard.aspx')) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
